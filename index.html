@@ -56,35 +56,54 @@ header p{
 }
 
 .sub-tabs-label{
-  font-size:11px;
-  font-weight:600;
-  color:var(--ink-soft);
+  font-size:12px;
+  font-weight:700;
+  color:var(--ink);
   text-transform:uppercase;
   letter-spacing:0.05em;
-  margin:26px 0 8px;
+  margin:26px 0 10px;
 }
 
-.legend{ display:flex; flex-wrap:wrap; gap:4px; border-bottom:1px solid var(--line); margin-bottom:24px; }
+.legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:26px;
+  padding:10px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:12px;
+}
 
 .chip{
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  padding:8px 14px;
-  border-radius:0;
-  border:none;
-  border-bottom:2px solid transparent;
-  margin-bottom:-1px;
-  background:transparent;
-  font:500 13px 'Inter',sans-serif;
+  gap:8px;
+  padding:10px 18px;
+  border-radius:9px;
+  border:1.5px solid var(--line);
+  background:var(--card);
+  font:600 13.5px 'Inter',sans-serif;
   color:var(--ink-soft);
   cursor:pointer;
-  transition:border-color .15s ease, color .15s ease;
+  transition:border-color .15s ease, color .15s ease, background .15s ease, box-shadow .15s ease;
 }
 
-.chip.active{ border-bottom-color:currentColor; font-weight:600; color:var(--ink); }
-.chip:hover{ color:var(--ink); }
-.chip .dot{ width:8px; height:8px; border-radius:50%; flex:none; }
+.chip[data-phase="dhcp"]{ border-color:var(--neutral); color:var(--neutral-ink); }
+.chip[data-phase="provisioning"]{ border-color:var(--provisioning); color:var(--provisioning-ink); }
+.chip[data-phase="registration"]{ border-color:var(--registration); color:var(--registration-ink); }
+
+.chip:hover[data-phase="dhcp"]{ background:var(--neutral-tint); }
+.chip:hover[data-phase="provisioning"]{ background:var(--provisioning-tint); }
+.chip:hover[data-phase="registration"]{ background:var(--registration-tint); }
+
+.chip.active{ box-shadow:0 2px 8px rgba(20,24,31,0.18); }
+.chip.active[data-phase="dhcp"]{ background:var(--neutral); border-color:var(--neutral); color:#fff; }
+.chip.active[data-phase="provisioning"]{ background:var(--provisioning); border-color:var(--provisioning); color:#fff; }
+.chip.active[data-phase="registration"]{ background:var(--registration); border-color:var(--registration); color:#fff; }
+
+.chip .dot{ width:10px; height:10px; border-radius:50%; flex:none; }
+.chip.active .dot{ background:#fff !important; }
 .chip:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
 
 .explorer{
@@ -1007,7 +1026,7 @@ function renderLegend(){
     const chip = document.createElement('button');
     chip.type = 'button';
     chip.className = 'chip' + (activePhase === key ? ' active' : '');
-    chip.style.color = activePhase === key ? p.color : '';
+    chip.setAttribute('data-phase', key);
     chip.innerHTML = '<span class="dot" style="background:' + p.color + '"></span>' + p.label + ' layer';
     chip.onclick = () => setActivePhase(key);
     legend.appendChild(chip);
